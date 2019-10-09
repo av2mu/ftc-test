@@ -61,6 +61,7 @@ public class BasicOpMode_Iterative extends OpMode
     private DcMotor rightDrive = null;
     private DcMotor turretPivot = null;
     private DcMotor turretHeight = null;
+    private CRServo pinch = null;
 
 
     /*
@@ -77,6 +78,7 @@ public class BasicOpMode_Iterative extends OpMode
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         turretPivot = hardwareMap.get(DcMotor.class, "turret_pivot");
         turretHeight = hardwareMap.get(DcMotor.class, "turret_height");
+        pinch = hardwareMap.get(CRServo.class, "pinch");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -118,10 +120,14 @@ public class BasicOpMode_Iterative extends OpMode
         // - This uses basic math to combine motions and is easier to drive straight.
         double drive = -gamepad1.left_stick_y;
         double turn  = -gamepad1.right_stick_x;
-        double turretX = -(Math.pow(gamepad2.left_stick_x, 3));
-        double turretY = -((gamepad2.right_stick_y/2));
+        double turretX = -(gamepad2.left_stick_x);
+        double turretY = -((gamepad2.right_stick_y));
         leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
         rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+
+        pinch.setPower(gamepad1.left_trigger - 0.8);
+
+
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
