@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="bruh: Iterative OpMode", group="Iterative Opmode")
+@TeleOp(name="basic mechanum drive: Iterative OpMode", group="Iterative Opmode")
 public class bruh extends OpMode
 {
     // Declare OpMode members.
@@ -72,13 +72,13 @@ public class bruh extends OpMode
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
 
-        double magnitude = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+        double magnitude = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
         double rightX = gamepad1.right_stick_x;
-        final double fld = magnitude * Math.cos(robotAngle) + rightX;
-        final double frd = magnitude * Math.sin(robotAngle) - rightX;
-        final double bld = magnitude * Math.sin(robotAngle) + rightX;
-        final double brd = magnitude * Math.cos(robotAngle) - rightX;
+        final double fld = (magnitude * Math.cos(robotAngle) + rightX);
+        final double frd = -(magnitude * Math.sin(robotAngle) - rightX);
+        final double bld = (magnitude * Math.sin(robotAngle) + rightX);
+        final double brd = -(magnitude * Math.cos(robotAngle) - rightX);
         leftFront.setPower(fld);
         rightFront.setPower(frd);
         leftRear.setPower(bld);
