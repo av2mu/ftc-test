@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="gang: Iterative OpMode", group="Iterative Opmode")
-public class MechIter extends OpMode
+@TeleOp(name="bruh: Iterative OpMode", group="Iterative Opmode")
+public class bruh extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -13,6 +13,9 @@ public class MechIter extends OpMode
     private DcMotor rightFront = null;
     private DcMotor leftRear = null;
     private DcMotor rightRear = null;
+    private double speed = 0;
+    private double direction = 0;
+
 
 
 
@@ -30,6 +33,13 @@ public class MechIter extends OpMode
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
         leftRear = hardwareMap.get(DcMotor.class, "left_rear");
         rightRear = hardwareMap.get(DcMotor.class, "right_rear");
+        //leftFront = Range.clip(leftFront,0.5,-0.5);
+        //rightFront = Range.clip(rightFront,1,-1);
+        leftFront.setPower(0.0);
+        rightFront.setPower(0.0);
+        leftRear.setPower(0.0);
+        rightRear.setPower(0.0);
+
 
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -62,19 +72,19 @@ public class MechIter extends OpMode
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
 
-        double v2 = (gamepad1.left_stick_y - gamepad1.left_stick_x)/2;
-        double v1 = (-gamepad1.left_stick_y - gamepad1.left_stick_x)/2;
-        double v4 = (-gamepad1.left_stick_y - gamepad1.left_stick_x)/2;
-        double v3 = (gamepad1.left_stick_y - gamepad1.left_stick_x)/2;
-        leftFront.setPower(v1);
-        rightFront.setPower(v2);
-        leftRear.setPower(v3);
-        rightRear.setPower(v4);
+        double magnitude = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+        double rightX = gamepad1.right_stick_x;
+        final double fld = magnitude * Math.cos(robotAngle) + rightX;
+        final double frd = magnitude * Math.sin(robotAngle) - rightX;
+        final double bld = magnitude * Math.sin(robotAngle) + rightX;
+        final double brd = magnitude * Math.cos(robotAngle) - rightX;
+        leftFront.setPower(fld);
+        rightFront.setPower(frd);
+        leftRear.setPower(bld);
+        rightRear.setPower(brd);
 
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)");
-        telemetry.addData("Joystick", "left (%.2f), right (%.2f)",-gamepad1.left_stick_y , gamepad1.right_stick_x);
+
     }
     /*
      * Code to run ONCE after the driver hits STOP
