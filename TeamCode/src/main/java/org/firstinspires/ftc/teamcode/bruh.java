@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="basic mechanum drive: Iterative OpMode", group="Iterative Opmode")
@@ -13,8 +15,10 @@ public class bruh extends OpMode
     private DcMotor rightFront = null;
     private DcMotor leftRear = null;
     private DcMotor rightRear = null;
-    private double speed = 0;
-    private double direction = 0;
+    private DcMotor turretPivot = null;
+    private DcMotor turretHeight = null;
+    private CRServo pinch = null;
+
 
 
 
@@ -33,12 +37,16 @@ public class bruh extends OpMode
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
         leftRear = hardwareMap.get(DcMotor.class, "left_rear");
         rightRear = hardwareMap.get(DcMotor.class, "right_rear");
+        turretPivot = hardwareMap.get(DcMotor.class, "turret_pivot");
+        turretHeight = hardwareMap.get(DcMotor.class, "turret_height");
         //leftFront = Range.clip(leftFront,0.5,-0.5);
         //rightFront = Range.clip(rightFront,1,-1);
         leftFront.setPower(0.0);
         rightFront.setPower(0.0);
         leftRear.setPower(0.0);
         rightRear.setPower(0.0);
+        turretHeight.setPower(0.0);
+        turretPivot.setPower(0.0);
 
 
 
@@ -75,14 +83,22 @@ public class bruh extends OpMode
         double magnitude = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
         double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
         double rightX = gamepad1.right_stick_x;
+        double turretX = -(gamepad2.left_stick_x);
+        double turretY = -((gamepad2.right_stick_y));
+
+
         final double fld = (magnitude * Math.cos(robotAngle) + rightX);
         final double frd = -(magnitude * Math.sin(robotAngle) - rightX);
         final double bld = (magnitude * Math.sin(robotAngle) + rightX);
         final double brd = -(magnitude * Math.cos(robotAngle) - rightX);
+
         leftFront.setPower(fld);
         rightFront.setPower(frd);
         leftRear.setPower(bld);
         rightRear.setPower(brd);
+
+        turretHeight.setPower(turretY);
+        turretPivot.setPower(turretX);
 
 
     }
