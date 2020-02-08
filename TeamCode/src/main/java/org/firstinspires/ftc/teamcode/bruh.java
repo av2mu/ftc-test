@@ -45,7 +45,7 @@ public class bruh extends OpMode
         leftRear.setPower(0.0);
         rightRear.setPower(0.0);
         turretHeight.setPower(0.0);
-        pinch.setPower(0.0);
+        pinch.setPower(0.5);
 
 
 
@@ -82,7 +82,7 @@ public class bruh extends OpMode
         double magnitude = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
         double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
         double rightX = gamepad1.right_trigger-gamepad1.left_trigger;
-        double turretY = -((gamepad1.right_stick_y));
+        double turretY = -((gamepad2.right_stick_y));
 
 
         final double fld = (magnitude * Math.cos(robotAngle) + rightX);
@@ -97,11 +97,11 @@ public class bruh extends OpMode
 
         turretHeight.setPower(turretY);
 
-        if (gamepad1.left_bumper)
+        if (gamepad2.right_bumper)
 
-            pinch.setPower(.2);
+            pinch.setPower(0.9);
         else
-            pinch.setPower(0);
+            pinch.setPower(0.5);
 
 
     }
