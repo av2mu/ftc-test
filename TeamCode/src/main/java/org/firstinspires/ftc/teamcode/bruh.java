@@ -15,7 +15,6 @@ public class bruh extends OpMode
     private DcMotor rightFront = null;
     private DcMotor leftRear = null;
     private DcMotor rightRear = null;
-    private DcMotor turretPivot = null;
     private DcMotor turretHeight = null;
     private CRServo pinch = null;
 
@@ -37,8 +36,8 @@ public class bruh extends OpMode
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
         leftRear = hardwareMap.get(DcMotor.class, "left_rear");
         rightRear = hardwareMap.get(DcMotor.class, "right_rear");
-        turretPivot = hardwareMap.get(DcMotor.class, "turret_pivot");
         turretHeight = hardwareMap.get(DcMotor.class, "turret_height");
+        pinch = hardwareMap.get(CRServo.class, "wrist");
         //leftFront = Range.clip(leftFront,0.5,-0.5);
         //rightFront = Range.clip(rightFront,1,-1);
         leftFront.setPower(0.0);
@@ -46,7 +45,7 @@ public class bruh extends OpMode
         leftRear.setPower(0.0);
         rightRear.setPower(0.0);
         turretHeight.setPower(0.0);
-        turretPivot.setPower(0.0);
+        pinch.setPower(0.0);
 
 
 
@@ -82,9 +81,8 @@ public class bruh extends OpMode
 
         double magnitude = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
         double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-        double rightX = gamepad1.right_stick_x;
-        double turretX = -(gamepad2.left_stick_x);
-        double turretY = -((gamepad2.right_stick_y));
+        double rightX = gamepad1.right_trigger-gamepad1.left_trigger;
+        double turretY = -((gamepad1.right_stick_y));
 
 
         final double fld = (magnitude * Math.cos(robotAngle) + rightX);
@@ -98,7 +96,12 @@ public class bruh extends OpMode
         rightRear.setPower(brd);
 
         turretHeight.setPower(turretY);
-        turretPivot.setPower(turretX);
+
+        if (gamepad1.left_bumper)
+
+            pinch.setPower(.2);
+        else
+            pinch.setPower(0);
 
 
     }
